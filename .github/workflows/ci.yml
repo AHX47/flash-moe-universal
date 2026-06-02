@@ -10,68 +10,78 @@ jobs:
   build-linux:
     name: Linux (x86_64)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        backend: [CPU, OPENCL]   # add CUDA later if runner available
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake build-essential libopenblas-dev ocl-icd-opencl-dev
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libopenblas-dev
 
-    - name: Configure CMake
-      run: |
-        mkdir build && cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_${{ matrix.backend }}=ON
+      - name: Configure CMake (CPU only)
+        run: |
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release \
+                   -DUSE_CPU=ON \
+                   -DUSE_OPENCL=OFF \
+                   -DUSE_METAL=OFF \
+                   -DUSE_CUDA=OFF \
+                   -DUSE_VULKAN=OFF \
+                   -DUSE_BLAS=ON
 
-    - name: Build
-      run: cmake --build build -- -j$(nproc)
+      - name: Build
+        run: cmake --build build -- -j$(nproc)
 
-    - name: Quick test (no model)
-      run: ./build/flash_moe --info
+      - name: Quick test
+        run: ./build/flash_moe --info
 
   build-macos:
     name: macOS (x86_64 + arm64)
     runs-on: macos-latest
-    strategy:
-      matrix:
-        backend: [CPU, METAL]
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: brew install cmake
+      - name: Install dependencies
+        run: brew install cmake
 
-    - name: Configure CMake
-      run: |
-        mkdir build && cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_${{ matrix.backend }}=ON
+      - name: Configure CMake (CPU only)
+        run: |
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release \
+                   -DUSE_CPU=ON \
+                   -DUSE_OPENCL=OFF \
+                   -DUSE_METAL=OFF \
+                   -DUSE_CUDA=OFF \
+                   -DUSE_VULKAN=OFF \
+                   -DUSE_BLAS=ON
 
-    - name: Build
-      run: cmake --build build -- -j$(sysctl -n hw.logicalcpu)
+      - name: Build
+        run: cmake --build build -- -j$(sysctl -n hw.logicalcpu)
 
-    - name: Quick test (no model)
-      run: ./build/flash_moe --info
+      - name: Quick test
+        run: ./build/flash_moe --info
 
   build-windows:
     name: Windows (x86_64)
     runs-on: windows-latest
-    strategy:
-      matrix:
-        backend: [CPU]   # OpenCL and CUDA can be added later
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Configure CMake
-      run: |
-        mkdir build
-        cd build
-        cmake .. -G "Visual Studio 17 2022" -A x64 -DUSE_${{ matrix.backend }}=ON
+      - name: Configure CMake (CPU only)
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -A x64 \
+                   -DCMAKE_BUILD_TYPE=Release \
+                   -DUSE_CPU=ON \
+                   -DUSE_OPENCL=OFF \
+                   -DUSE_METAL=OFF \
+                   -DUSE_CUDA=OFF \
+                   -DUSE_VULKAN=OFF \
+                   -DUSE_BLAS=OFF
 
-    - name: Build
-      run: cmake --build build --config Release
+      - name: Build
+        run: cmake --build build --config Release
 
-    - name: Quick test (no model)
-      run: ./build/Release/flash_moe.exe --info
+      - name: Quick test
+        run: .\build\Release\flash_moe.exe --info
