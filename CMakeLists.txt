@@ -191,10 +191,10 @@ endif()
 target_link_libraries(flash_moe PRIVATE ${LINK_LIBS})
 
 # ─── MoE benchmark tool ───────────────────────────────────────────────────────
-add_executable(flash_moe_bench
-    src/core/inference_engine.c
-    src/cli/bench.c
-)
+# add_executable(flash_moe_bench
+ #   src/core/inference_engine.c
+  #  src/cli/bench.c
+#)
 target_include_directories(flash_moe_bench PRIVATE src/ src/core/ src/platform/ src/backends/)
 target_link_libraries(flash_moe_bench PRIVATE ${LINK_LIBS})
 
