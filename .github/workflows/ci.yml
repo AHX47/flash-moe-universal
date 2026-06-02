@@ -53,7 +53,7 @@ jobs:
                    -DUSE_METAL=OFF \
                    -DUSE_CUDA=OFF \
                    -DUSE_VULKAN=OFF \
-                   -DUSE_BLAS=ON
+                   -DUSE_BLAS=OFF
 
       - name: Build
         run: cmake --build build -- -j$(sysctl -n hw.logicalcpu)
