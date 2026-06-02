@@ -12,6 +12,8 @@ Based on [flash-moe](https://github.com/danveloper/flash-moe) by Daniel Woods â€
 ---
 
 ## What is this?
+<img src="has-anyone-tried-this-flash-moe-running-a-397b-parameter-v0-aipsbDL6RzWMY8YaJMD_OPdhrYChduqs4Rjw5we_vhg.webp" alt="flash-meo-uni" width="400" height="200" />
+
 
 Flash-MoE is a bareâ€‘metal inference engine that can run giant AI models (397 billion parameters) locally, without cloud, without Python, without frameworks. The original works only on Apple Silicon Macs.
 
